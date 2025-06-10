@@ -1,0 +1,25 @@
+{
+  "name": "vue-tic-tac-toe-app",
+  "version": "1.0.0",
+  "description": "A simple Tic Tac Toe game built with Vue.js",
+  "main": "src/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite": "^5.2.8"
+  },
+  "keywords": [
+    "vue",
+    "tic-tac-toe",
+    "game"
+  ],
+  "author": "",
+  "license": "MIT"
+}
