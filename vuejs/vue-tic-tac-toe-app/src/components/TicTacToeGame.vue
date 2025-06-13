@@ -14,11 +14,22 @@
     <button v-if="winner || isDraw" @click="resetGame">Restart Game</button>
     <p v-if="winner">{{ winner }} wins!</p>
     <p v-if="isDraw">It's a draw!</p>
+    <button @click="requestPermission">Enable Notifications</button>
   </div>
 </template>
 
 <script>
+import { getToken, onMessage } from "firebase/messaging";
+import { messaging } from "../firebase";
+
 export default {
+  mounted() {
+    onMessage(messaging, (payload) => {
+      console.log("Message received. ", payload);
+      // Customize notification handling here
+      alert(`New message: ${payload.notification.title}`);
+    });
+  },
   data() {
     return {
       board: Array(9).fill(null),
@@ -32,9 +43,25 @@ export default {
     }
   },
   methods: {
+    async requestPermission() {
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+          console.log("Notification permission granted.");
+          // You need to replace 'YOUR_VAPID_KEY' with your actual VAPID key from the Firebase console.
+          const token = await getToken(messaging, { vapidKey: 'BH2rCQkMjwmOTRH9jkjykkmx5xUx25cDweLmL6cTlbJznP_nxtivrycwO4ltmlX3TyiHQjGGjJtZJqADYefGtPE' });
+          console.log("FCM Token:", token);
+          // Send this token to your server
+        } else {
+          console.log("Unable to get permission to notify.");
+        }
+      } catch (error) {
+        console.error("An error occurred while requesting permission. ", error);
+      }
+    },
     makeMove(index) {
       if (!this.board[index] && !this.winner) {
-        this.$set(this.board, index, this.currentPlayer);
+        this.board[index] = this.currentPlayer;
         this.checkWinner();
         this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
       }
